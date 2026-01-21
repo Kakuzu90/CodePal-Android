@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="prism.css">
+    <script src="prism.js"></script>
+    <script src="prism-python.js"></script> <!-- add other languages if needed -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+        }
+        #container {
+            position: relative;
+            border-radius: 12px;
+            margin: 12px;
+            background-color: #2d2d2d;
+            overflow: hidden;
+        }
+        pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        #copyBtn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        #copyBtn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="copyBtn">Copy</div>
+    <pre><code class="language-python">@CODE@</code></pre>
+</div>
+
+<script>
+    document.getElementById("copyBtn").onclick = function () {
+        navigator.clipboard.writeText(`@CODE@`).then(function() {
+
+        });
+    };
+</script>
+</body>
+</html>

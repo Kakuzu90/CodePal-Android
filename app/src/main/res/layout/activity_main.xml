@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:background="@color/primaryColor"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/notes_list"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:layout_marginStart="15dp"/>
+
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/outline_account_circle_24"
+            android:contentDescription="@string/app_name"
+            android:layout_marginEnd="15dp"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/codepal_input"
+        android:hint="@string/search_hint"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:layout_margin="15dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/emptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notes_empty"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/assistant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon"
+        android:layout_marginEnd="16dp"
+        android:layout_gravity="end|bottom"
+        app:fabSize="mini"
+        app:backgroundTint="@color/white"
+        app:tint="@null"
+        android:contentDescription="@string/add_note_label"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/outline_add_2_24"
+        android:layout_margin="16dp"
+        android:layout_gravity="end|bottom"
+        app:fabSize="mini"
+        app:backgroundTint="@color/primaryColor"
+        app:tint="@color/black"
+        android:contentDescription="@string/add_note_label"
+        />
+
+</LinearLayout>
