@@ -6,6 +6,7 @@ import android.content.Context;
 import com.example.codepal.Models.Chat;
 import com.example.codepal.Models.Note;
 import com.example.codepal.Models.User;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -69,6 +70,7 @@ public class Firebase {
         Map<String, Object> data = new HashMap<>();
         data.put("content", content);
         data.put("type", type);
+        data.put("created_at", FieldValue.serverTimestamp());
         db.collection("users")
                 .document(userId)
                 .collection("chats")
