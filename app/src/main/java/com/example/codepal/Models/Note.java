@@ -1,14 +1,24 @@
 package com.example.codepal.Models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Note {
-    private int id;
-    private int user_id;
+    private String id;
+    private String user_id;
     private String title;
     private String content;
     private int is_pinned;
     private String created_at;
     private String updated_at;
-    public Note(int id, int user_id, String title, String content, int is_pinned, String created_at, String updated_at) {
+    public Note(String id, String user_id, String title, String content, String updated_at) {
+        this.id = id;
+        this.user_id = user_id;
+        this.title = title;
+        this.content = content;
+        this.updated_at = updated_at;
+    }
+    public Note(String id, String user_id, String title, String content, int is_pinned, String created_at, String updated_at) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
@@ -18,11 +28,11 @@ public class Note {
         this.updated_at = updated_at;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public int getUser_id() {
+    public String getUserId() {
         return user_id;
     }
 
@@ -64,5 +74,13 @@ public class Note {
             return parts[0];
         }
         return updated_at;
+    }
+    public Map<String, Object> toMap() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", this.getTitle());
+        data.put("content", this.getContent());
+        data.put("created_at", this.getFormattedDate());
+
+        return data;
     }
 }

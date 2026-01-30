@@ -18,9 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.codepal.Adapters.ConvoAdapter;
+import com.example.codepal.Models.Chat;
 import com.example.codepal.Models.Conversation;
 import com.example.codepal.Services.CodePalAssistant;
 import com.example.codepal.Services.Database;
+import com.example.codepal.Services.Firebase;
+import com.example.codepal.Services.Network;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,12 +47,13 @@ public class ConversationActivity extends AppCompatActivity {
     AppCompatButton button;
     RecyclerView recyclerView;
     Database database;
+    Firebase firebase;
     ConvoAdapter adapter;
     List<Conversation> convos;
     OkHttpClient client = new OkHttpClient();
     Call running;
-    private int USERID;
-    private int CHATID = -1;
+    private String USERID;
+    private String CHATID = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,15 +66,16 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
         if (getIntent().hasExtra("id")) {
-            CHATID = getIntent().getIntExtra("id", -1);
+            CHATID = getIntent().getStringExtra("id");
         }
 
         database = new Database(this);
+        firebase = new Firebase(this, database);
         convos = new ArrayList<>();
 
-        adapter = new ConvoAdapter(this, CHATID, convos, database);
         SharedPreferences shared = getSharedPreferences("AuthSession", MODE_PRIVATE);
-        USERID = shared.getInt("userId", -1);
+        USERID = shared.getString("userId", null);
+        adapter = new ConvoAdapter(this, CHATID, convos, database, firebase, USERID);
 
         backImage = findViewById(R.id.back);
         input = findViewById(R.id.prompt);
@@ -99,7 +104,7 @@ public class ConversationActivity extends AppCompatActivity {
             sendMessage();
         });
 
-        if (CHATID == -1) {
+        if (CHATID == null) {
             setupWelcomeMessage();
         }
     }
@@ -111,8 +116,13 @@ public class ConversationActivity extends AppCompatActivity {
             return;
         }
 
-        if (CHATID == -1) {
+        if (CHATID == null) {
             setupChatTitle(message);
+        }
+
+        if (!Network.isConnected(this)) {
+            Toast.makeText(this, "No internet Connection!", Toast.LENGTH_LONG).show();
+            return;
         }
 
         input.setText("");
@@ -220,11 +230,15 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
     private void setupChatTitle(String prompt) {
-        CHATID = Math.toIntExact(database.storeChat(USERID, prompt));
+        CHATID = database.storeChat(USERID, prompt);
+        if (Network.isConnected(this)) {
+            Chat chat = database.getChat(CHATID);
+            firebase.storeChat(chat, USERID);
+        }
         adapter.setChatId(CHATID);
     }
     private void loadConversation() {
-        if (CHATID != -1) {
+        if (CHATID != null) {
             List<Conversation> loadedConversations = database.getConversations(CHATID);
             Log.d("DB_DEBUG", "Loaded " + loadedConversations.size() + " conversations");
 

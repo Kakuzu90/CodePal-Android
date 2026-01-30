@@ -1,17 +1,31 @@
 package com.example.codepal.Models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
-    private int id;
+    private String id;
     private String username;
+    private String password_text;
     private String created_at;
+    private int account_status;
     private int count;
-    public User(int id, String username, String created_at, int count) {
+    public User(String id, String username, String created_at, String password_text, int account_status) {
+        this.id = id;
+        this.username = username;
+        this.created_at = created_at;
+        this.password_text = password_text;
+        this.account_status = account_status;
+    }
+    public User(String id, String username, String created_at, int count, String password_text, int account_status) {
         this.id = id;
         this.username = username;
         this.created_at = created_at;
         this.count = count;
+        this.password_text = password_text;
+        this.account_status = account_status;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
     public String getUsername() {
@@ -30,5 +44,20 @@ public class User {
             return parts[0];
         }
         return created_at;
+    }
+    public String getPasswordText() {
+        return password_text;
+    }
+    public int getAccountStatus() {
+        return account_status;
+    }
+    public Map<String, Object> toMap() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", this.getUsername());
+        data.put("password_text", this.getPasswordText());
+        data.put("created_at", this.getFormattedDate());
+        data.put("account_status", this.getAccountStatus());
+
+        return data;
     }
 }

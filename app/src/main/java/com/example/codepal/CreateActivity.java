@@ -18,7 +18,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.codepal.Models.User;
 import com.example.codepal.Services.Database;
+import com.example.codepal.Services.Firebase;
+import com.example.codepal.Services.Network;
 
 public class CreateActivity extends AppCompatActivity {
     TextView loginLink;
@@ -26,6 +29,7 @@ public class CreateActivity extends AppCompatActivity {
     CheckBox showPassword;
     AppCompatButton createBtn;
     private Database database;
+    private Firebase firebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class CreateActivity extends AppCompatActivity {
         });
 
         database = new Database(this);
+        firebase = new Firebase(this, database);
 
         loginLink = findViewById(R.id.loginLink);
         username = findViewById(R.id.username);
@@ -109,7 +114,14 @@ public class CreateActivity extends AppCompatActivity {
             Toast.makeText(this, getUsername + " already exists. Please choose another", Toast.LENGTH_LONG).show();
             return;
         }
-        if (database.createUser(getUsername, getPassword)) {
+        String uid = database.createUser(getUsername, getPassword);
+        if (uid != null) {
+
+            if (Network.isConnected(this)) {
+                User user = database.getUser(uid);
+                firebase.storeUser(user);
+            }
+
             Toast.makeText(this, "Account created successfully! Please login.", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(CreateActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

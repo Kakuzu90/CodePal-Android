@@ -14,6 +14,7 @@ import com.example.codepal.Holders.ConvoHolder;
 import com.example.codepal.Models.Conversation;
 import com.example.codepal.R;
 import com.example.codepal.Services.Database;
+import com.example.codepal.Services.Firebase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,15 +23,19 @@ import java.util.List;
 
 public class ConvoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Conversation> messages;
-    private int id;
+    private String id;
+    private String userId;
     private Database database;
     private Context context;
     private String template;
-    public ConvoAdapter(Context context, int id, List<Conversation> messages, Database database) {
+    private Firebase firebase;
+    public ConvoAdapter(Context context, String id, List<Conversation> messages, Database database, Firebase firebase, String userId) {
         this.context = context;
         this.id = id;
         this.messages = messages;
         this.database = database;
+        this.firebase = firebase;
+        this.userId = userId;
         template = loadAssets();
     }
     public void addMessage(Conversation message) {
@@ -40,20 +45,22 @@ public class ConvoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void addAIMessage(String message, boolean store) {
         List<Conversation> parse = parseMessage(message);
         for (Conversation item : parse) {
-            if (store && this.id != -1) {
-                boolean result = database.storeConvo(this.id, item.getContent(), item.getType());
+            if (store && this.id != null) {
+                String uid = database.storeConvo(this.id, item.getContent(), item.getType());
+                firebase.storeConvo(userId, id, uid, item.getContent(), item.getType());
             }
             addMessage(item);
         }
         notifyItemRangeInserted(messages.size(), parse.size());
     }
     public void addUserMessage(String message) {
-        if (this.id != -1) {
-            boolean result = database.storeConvo(this.id, message, Conversation.TYPE_USER);
+        if (this.id != null) {
+            String uid = database.storeConvo(this.id, message, Conversation.TYPE_USER);
+            firebase.storeConvo(userId, id, uid, message, Conversation.TYPE_USER);
         }
         addMessage(new Conversation(message, Conversation.TYPE_USER, ""));
     }
-    public void setChatId(int chatId) {
+    public void setChatId(String chatId) {
         this.id = chatId;
     }
     public void removeLast() {

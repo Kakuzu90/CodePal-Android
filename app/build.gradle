@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id "com.chaquo.python"
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -54,4 +55,7 @@ dependencies {
     implementation("io.github.rosemoe:language-textmate")
 
     implementation 'com.squareup.okhttp3:okhttp:5.3.0'
+
+    implementation platform('com.google.firebase:firebase-bom:34.8.0')
+    implementation('com.google.firebase:firebase-firestore:26.1.0')
 }

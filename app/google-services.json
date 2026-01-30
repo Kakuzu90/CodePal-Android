@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "536582998668",
+    "project_id": "codepal-app",
+    "storage_bucket": "codepal-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536582998668:android:471aa7007184b0543c09a9",
+        "android_client_info": {
+          "package_name": "com.example.codepal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2_F3qTfecUFjFqFVFyCzKIbCglfS8DN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

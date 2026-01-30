@@ -5,16 +5,16 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Chat {
-    private int id;
+    private String id;
     private String title;
     private long created_at;
-    public Chat(int id, String title, long created_at) {
+    public Chat(String id, String title, long created_at) {
         this.id = id;
         this.title = title;
         this.created_at = created_at;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

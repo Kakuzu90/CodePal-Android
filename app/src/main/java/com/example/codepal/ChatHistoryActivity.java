@@ -32,7 +32,7 @@ public class ChatHistoryActivity extends AppCompatActivity implements ChatInterf
     Database database;
     List<Chat> chats;
     ChatAdapter adapter;
-    private int USERID;
+    private String USERID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ public class ChatHistoryActivity extends AppCompatActivity implements ChatInterf
         database = new Database(this);
         chats = new ArrayList<>();
         SharedPreferences shared = getSharedPreferences("AuthSession", MODE_PRIVATE);
-        USERID = shared.getInt("userId", -1);
+        USERID = shared.getString("userId", null);
 
         backImage = findViewById(R.id.back);
         button = findViewById(R.id.newChat);

@@ -1,5 +1,6 @@
 package com.example.codepal;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NoteInterface {
     RecyclerView recyclerView;
     FloatingActionButton chatBtn, editorBtn;
     EditText search;
-    private int USERID;
+    private String USERID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NoteInterface {
 
         database = new Database(this);
         shared = getSharedPreferences("AuthSession", MODE_PRIVATE);
-        USERID = shared.getInt("userId", -1);
+        USERID = shared.getString("userId", null);
 
         emptyState = findViewById(R.id.emptyState);
         profile = findViewById(R.id.profile);
@@ -120,11 +120,13 @@ public class MainActivity extends AppCompatActivity implements NoteInterface {
             adapter.updateNotes(filteredNotes);
         }
     }
+    @SuppressLint("GestureBackNavigation")
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         moveTaskToBack(true);
     }
+
 
     @Override
     protected void onResume() {

@@ -19,7 +19,7 @@ import com.example.codepal.Services.Database;
 public class ProfileActivity extends AppCompatActivity {
     Database database;
     SharedPreferences shared;
-    private int USERID;
+    private String USERID;
     ImageView backBtn, logoutBtn;
     TextView usernameText, dateText, noteText;
     AppCompatButton delete;
@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         database = new Database(this);
         shared = getSharedPreferences("AuthSession", MODE_PRIVATE);
-        USERID = shared.getInt("userId", -1);
+        USERID = shared.getString("userId", null);
 
         backBtn = findViewById(R.id.back);
         logoutBtn = findViewById(R.id.logout);

@@ -1,5 +1,6 @@
 package com.example.codepal;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +19,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+import com.example.codepal.Models.Note;
 import com.example.codepal.Services.Database;
+import com.example.codepal.Services.Firebase;
+import com.example.codepal.Services.Network;
 
 import org.eclipse.tm4e.core.registry.IThemeSource;
 
@@ -38,8 +42,9 @@ public class NoteEditorActivity extends AppCompatActivity {
     EditText title;
     CodeEditor editor;
     Database database;
-    private int USERID;
-    private int NOTED_ID = -1;
+    Firebase firebase;
+    private String USERID;
+    private String NOTED_ID = null;
     private boolean EDIT_MODE = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +62,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         }
 
         database = new Database(this);
+        firebase = new Firebase(this, database);
         SharedPreferences shared = getSharedPreferences("AuthSession", MODE_PRIVATE);
-        USERID = shared.getInt("userId", -1);
+        USERID = shared.getString("userId", null);
 
         back = findViewById(R.id.back);
         run = findViewById(R.id.run);
@@ -79,7 +85,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             // Check if editing existing note
             if (getIntent().hasExtra("title")) {
                 EDIT_MODE = true;
-                NOTED_ID = getIntent().getIntExtra("id", -1);
+                NOTED_ID = getIntent().getStringExtra("id");
                 String getTitle = getIntent().getStringExtra("title");
                 String getContent = getIntent().getStringExtra("content");
 
@@ -102,7 +108,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(NoteEditorActivity.this, ChatHistoryActivity.class);
 
-                if (NOTED_ID != -1) {
+                if (NOTED_ID != null) {
                     intent.putExtra("id", NOTED_ID);
                     intent.putExtra("title", getTitle);
                     intent.putExtra("content", getContent);
@@ -159,19 +165,28 @@ public class NoteEditorActivity extends AppCompatActivity {
             return;
         }
 
-        boolean success;
+        boolean success = false;
         if (EDIT_MODE) {
             // Update existing note
             success = database.updateNote(NOTED_ID, getTitle, getContent);
             if (success) {
+                if (Network.isConnected(this)) {
+                    Note note = database.getNote(NOTED_ID);
+                    firebase.storeNote(note);
+                }
                 Toast.makeText(this, "Note updated successfully!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Failed to update note", Toast.LENGTH_SHORT).show();
             }
         } else {
             // Create new note
-            success = database.storeNote(USERID, getTitle, getContent);
-            if (success) {
+            String uid = database.storeNote(USERID, getTitle, getContent);
+            if (uid != null) {
+                success = true;
+                if (Network.isConnected(this)) {
+                    Note note = database.getNote(uid);
+                    firebase.storeNote(note);
+                }
                 Toast.makeText(this, "Note saved successfully!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Failed to save note", Toast.LENGTH_SHORT).show();
@@ -248,6 +263,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("GestureBackNavigation")
     @Override
     public void onBackPressed() {
         // Check if there are unsaved changes
