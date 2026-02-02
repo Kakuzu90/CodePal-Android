@@ -94,7 +94,6 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
 
             run.setOnClickListener(v -> {
-                //validatePythonCode();
                 checkSyntax();
             });
 
@@ -220,6 +219,12 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
     private void checkSyntax() {
         try {
+            String code = editor.getText().toString().trim();
+
+            if (code.isEmpty()) {
+                return;
+            }
+
             if (!Python.isStarted()) {
                 Python.start(new AndroidPlatform(this));
             }
@@ -227,7 +232,6 @@ public class NoteEditorActivity extends AppCompatActivity {
             Python py = Python.getInstance();
             PyObject module = py.getModule("syntax_checker");
 
-            String code = editor.getText().toString().trim();
             PyObject response = module.callAttr("check", code);
             Map<PyObject, PyObject> result = response.asMap();
 
