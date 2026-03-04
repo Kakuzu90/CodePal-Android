@@ -1,6 +1,5 @@
 package com.example.codepal.Services;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -33,10 +32,11 @@ public class Database extends SQLiteOpenHelper {
         String user = "CREATE TABLE users (" +
                 "id TEXT PRIMARY KEY, " +
                 "username TEXT UNIQUE NOT NULL, " +
+                "email TEXT UNIQUE NOT NULL," +
                 "password TEXT NOT NULL, " +
                 "password_text TEXT NOT NULL, " +
                 "created_at TEXT NOT NULL, " +
-                "account_status INTEGER DEFAULT 1, " +
+                "account_status INTEGER DEFAULT 2, " +
                 "sync_status INTEGER DEFAULT 0" +
                 ")";
         String note = "CREATE TABLE notes (" +
@@ -98,21 +98,17 @@ public class Database extends SQLiteOpenHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return sdf.format(new Date());
     }
-    public String createUser(String username, String password) {
+    public void createUser(String uid, String username, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String uid = UUID.randomUUID().toString();
         ContentValues values = new ContentValues();
         values.put("id", uid);
         values.put("username", username);
+        values.put("email", email);
         values.put("password", hashPassword(password));
         values.put("created_at", getCurrentTimestamp());
         values.put("password_text", password);
 
-        long result = db.insert("users", null, values);
-        if ( result == -1 ) {
-            return null;
-        }
-        return uid;
+        db.insert("users", null, values);
     }
     public boolean checkUsername(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -134,6 +130,7 @@ public class Database extends SQLiteOpenHelper {
         User user = null;
         if (cursor.moveToFirst()) {
             String getUsername = cursor.getString(cursor.getColumnIndexOrThrow("username"));
+            String getEmail = cursor.getString(cursor.getColumnIndexOrThrow("email"));
             String createdAt = cursor.getString(cursor.getColumnIndexOrThrow("created_at"));
             String password_text = cursor.getString(cursor.getColumnIndexOrThrow("password_text"));
             int account_status = cursor.getInt(cursor.getColumnIndexOrThrow("account_status"));
@@ -141,21 +138,21 @@ public class Database extends SQLiteOpenHelper {
                     new String[]{String.valueOf(id)},
                     null, null, null);
             count = countCursor.getCount();
-            user = new User(id, getUsername, createdAt, count, password_text, account_status);
+            user = new User(id, getEmail, getUsername, createdAt, count, password_text, account_status);
+            countCursor.close();
         }
         cursor.close();
         return user;
     }
-    public boolean destroyUser(String id) {
+    public void destroyUser(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete("users", "id=?",
                 new String[]{String.valueOf(id)});
-        return result > 0;
     }
     public Auth auth(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("users", new String[]{"id", "account_status"},
-                "username=? AND password=?",
+                "email=? AND password=?",
                 new String[]{username, hashPassword(password)},
                 null, null, null);
         Auth auth = null;
@@ -388,6 +385,23 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues form = new ContentValues();
         form.put("account_status", status);
+
+        db.update("users", form, "id=?",
+                new String[]{String.valueOf(id)});
+    }
+    public void updateUserPassword(String id, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues form = new ContentValues();
+        form.put("password_text", password);
+        form.put("password", hashPassword(password));
+
+        db.update("users", form, "id=?",
+                new String[]{String.valueOf(id)});
+    }
+    public void updateUserEmail(String id, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues form = new ContentValues();
+        form.put("email", email);
 
         db.update("users", form, "id=?",
                 new String[]{String.valueOf(id)});

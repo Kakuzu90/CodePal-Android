@@ -6,6 +6,7 @@ import java.util.Map;
 public class User {
     private String id;
     private String username;
+    private String email;
     private String password_text;
     private String created_at;
     private int account_status;
@@ -17,9 +18,10 @@ public class User {
         this.password_text = password_text;
         this.account_status = account_status;
     }
-    public User(String id, String username, String created_at, int count, String password_text, int account_status) {
+    public User(String id, String email, String username, String created_at, int count, String password_text, int account_status) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.created_at = created_at;
         this.count = count;
         this.password_text = password_text;
@@ -31,6 +33,7 @@ public class User {
     public String getUsername() {
         return username;
     }
+    public String getEmail() { return email; }
     public String getCreated_at() {
         return created_at;
     }

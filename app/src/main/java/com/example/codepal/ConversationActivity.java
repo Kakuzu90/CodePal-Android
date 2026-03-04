@@ -140,7 +140,7 @@ public class ConversationActivity extends AppCompatActivity {
     private void sendToOpenAI(String prompt) {
         try {
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("model", "gpt-4o-mini");
+            jsonBody.put("model", "gpt-5-nano");
             JSONArray messages = new JSONArray();
 
             messages.put(new JSONObject()

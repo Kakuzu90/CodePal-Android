@@ -13,4 +13,7 @@ public class Auth {
     public boolean isSuspended() {
         return account_status == 0;
     }
+    public boolean isNotVerified() {
+        return account_status == 2;
+    }
 }

@@ -44,7 +44,34 @@
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:autofillHints="username"
             android:hint="@string/username_hint"
+            android:inputType="text"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:background="@drawable/codepal_input"
+            android:padding="12dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_address"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            tools:ignore="TextViewEdits" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:autofillHints="emailAddress"
+            android:hint="@string/enter_your_email_address_here"
+            android:inputType="textEmailAddress"
             android:textSize="14sp"
             android:textColor="@color/black"
             android:textColorHint="@color/gray"

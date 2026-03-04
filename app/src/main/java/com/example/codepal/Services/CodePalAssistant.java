@@ -71,6 +71,9 @@ public class CodePalAssistant {
                 "code examples, debugging, best practices, PEP standards, and programming concepts. " +
                 "If a question is not about Python programming, politely decline to answer " +
                 "and remind the user that you only help with Python-related topics. " +
+                "If your response includes any code, ALWAYS wrap the entire code block using triple backticks (```), " +
+                "and specify the language as python (```python). " +
+                "Do not provide code without proper code block formatting. " +
                 "Keep responses focused, technical, and helpful for Python developers.";
     }
     public static String getRandomRejectionMessage() {

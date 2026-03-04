@@ -31,4 +31,11 @@
     <string name="placeholder_date">Jan 1, 2024</string>
     <string name="delete_account">Delete Account</string>
     <string name="convo_warning">Heads up! Your conversations are kept for up to 30 days. After that, they will be removed automatically.</string>
+    <string name="email_address">Email Address:</string>
+    <string name="enter_your_email_address_here">Enter your email address here</string>
+    <string name="forgot_password"><u>Forgot your password?</u></string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="account_profile">Account Profile</string>
+    <string name="enter_your_new_email_address_here">Enter your new email address here</string>
+    <string name="change_email">Change Email</string>
 </resources>

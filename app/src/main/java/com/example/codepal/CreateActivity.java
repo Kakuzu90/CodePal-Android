@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Patterns;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,10 +23,14 @@ import com.example.codepal.Models.User;
 import com.example.codepal.Services.Database;
 import com.example.codepal.Services.Firebase;
 import com.example.codepal.Services.Network;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class CreateActivity extends AppCompatActivity {
     TextView loginLink;
-    EditText username, password, confirm_password;
+    EditText username, password, confirm_password, emailAddress;
     CheckBox showPassword;
     AppCompatButton createBtn;
     private Database database;
@@ -47,6 +52,7 @@ public class CreateActivity extends AppCompatActivity {
 
         loginLink = findViewById(R.id.loginLink);
         username = findViewById(R.id.username);
+        emailAddress = findViewById(R.id.email);
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         showPassword = findViewById(R.id.showPassword);
@@ -78,17 +84,32 @@ public class CreateActivity extends AppCompatActivity {
         });
 
         createBtn.setOnClickListener(v -> {
-            store();
+            if (Network.isConnected(this)) {
+                store();
+            } else {
+                Toast.makeText(this, "Please connect to an internet!", Toast.LENGTH_LONG).show();
+            }
         });
     }
     private void store() {
         String getUsername = username.getText().toString().trim();
         String getPassword = password.getText().toString().trim();
+        String getEmailAddress = emailAddress.getText().toString().trim();
         String getConfirmPassword = confirm_password.getText().toString().trim();
 
         if (getUsername.isEmpty()) {
             username.requestFocus();
             username.setError("Username is required");
+            return;
+        }
+        if (getEmailAddress.isEmpty()) {
+            emailAddress.requestFocus();
+            emailAddress.setError("Email Address is required");
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(getEmailAddress).matches()) {
+            emailAddress.requestFocus();
+            emailAddress.setError("Enter a valid email address");
             return;
         }
         if (getPassword.isEmpty()) {
@@ -114,21 +135,37 @@ public class CreateActivity extends AppCompatActivity {
             Toast.makeText(this, getUsername + " already exists. Please choose another", Toast.LENGTH_LONG).show();
             return;
         }
-        String uid = database.createUser(getUsername, getPassword);
-        if (uid != null) {
 
-            if (Network.isConnected(this)) {
-                User user = database.getUser(uid);
-                firebase.storeUser(user);
-            }
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            Toast.makeText(this, "Account created successfully! Please login.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(CreateActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        } else {
-            Toast.makeText(this, "Failed to create an account. Please try again.", Toast.LENGTH_LONG).show();
-        }
+        auth.createUserWithEmailAndPassword(getEmailAddress, getPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+
+                        if (user != null) {
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(verifyTask -> {
+                                       if (verifyTask.isSuccessful()) {
+                                           Toast.makeText(this, "Verification email sent. Check your email", Toast.LENGTH_SHORT).show();
+                                       }
+                                    });
+                            String uid = user.getUid();
+                            database.createUser(uid, getUsername, getEmailAddress, getPassword);
+                            User user1 = database.getUser(uid);
+                            firebase.storeUser(user1);
+
+                            auth.signOut();
+
+                            Intent intent = new Intent(CreateActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                })
+                .addOnFailureListener(task -> {
+                    Toast.makeText(this, "Failed to create an account. Please try again.", Toast.LENGTH_LONG).show();
+                });
     }
 }

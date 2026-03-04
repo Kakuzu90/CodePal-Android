@@ -15,13 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CodePalV2">
         <activity
+            android:name=".ForgotActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ConversationActivity"
-            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ChatHistoryActivity"
             android:exported="false" />

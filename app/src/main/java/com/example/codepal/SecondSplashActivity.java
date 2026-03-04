@@ -1,5 +1,6 @@
 package com.example.codepal;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,8 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+@SuppressLint("CustomSplashScreen")
 public class SecondSplashActivity extends AppCompatActivity {
-    private Database database;
     private Firebase firebase;
 
     @Override
@@ -33,19 +34,16 @@ public class SecondSplashActivity extends AppCompatActivity {
 
         if (Network.isConnected(this)) {
             // Initialize database and Firebase service
-            database = new Database(this);
+            Database database = new Database(this);
             firebase = new Firebase(this, database);
 
             // Start bulk sync
             startBulkSync();
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SecondSplashActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(SecondSplashActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }, 2000);
         }
     }
@@ -54,13 +52,14 @@ public class SecondSplashActivity extends AppCompatActivity {
         firebase.bulkSyncData(new Firebase.SyncCallback() {
             @Override
             public void onComplete(boolean success, String message) {
+                Log.d("CLYDE", "Sync completed: " + message);
                 runOnUiThread(() -> {
                     if (success) {
-                        Log.d("SecondSplash", "Sync completed: " + message);
+                        Log.d("CLYDE", "Sync completed: " + message);
                         // Navigate to LoginActivity after successful sync
                         proceedToLoginActivity();
                     } else {
-                        Log.e("SecondSplash", "Sync failed: " + message);
+                        Log.e("CLYDE", "Sync failed: " + message);
                         // Navigate to LoginActivity even if sync fails
                         proceedToLoginActivity();
                     }
@@ -70,7 +69,7 @@ public class SecondSplashActivity extends AppCompatActivity {
             @Override
             public void onProgress(int current, int total, String type) {
                 runOnUiThread(() -> {
-                    Log.d("SecondSplash", "Syncing " + type + ": " + current + "/" + total);
+                    Log.d("CLYDE", "Syncing " + type + ": " + current + "/" + total);
                     // You can add progress bar updates here if needed
                 });
             }

@@ -1,117 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:gravity="center"
     tools:context=".LoginActivity">
 
+    <!-- ================= MAIN CONTENT ================= -->
     <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:padding="24dp"
-        >
+        android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="38sp"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:textColor="@color/secondaryColor"
-            android:fontFamily="sans-serif-black"
-            android:layout_marginBottom="10dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/username"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginBottom="5dp"
-            />
-
-        <EditText
-            android:id="@+id/username"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/username_hint"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
-            android:background="@drawable/codepal_input"
-            android:padding="12dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            />
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:inputType="textPassword"
-            android:hint="@string/password_hint"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
-            android:background="@drawable/codepal_input"
-            android:padding="12dp"
-            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="38sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/secondaryColor"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginBottom="10dp"/>
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/showPassword"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email_address"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="emailAddress"
+                android:hint="@string/enter_your_email_address_here"
+                android:inputType="textEmailAddress"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:background="@drawable/codepal_input"
+                android:padding="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="password"
+                android:inputType="textPassword"
+                android:hint="@string/password_hint"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:background="@drawable/codepal_input"
+                android:padding="12dp"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/showPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_password"
+                android:textSize="14sp"
+                android:textColor="@color/gray"
+                android:layout_marginTop="5dp"
+                app:buttonTint="@drawable/codepal_checkbox"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/login"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@drawable/codepal_button"
+                android:layout_marginTop="15dp"/>
+
+            <TextView
+                android:id="@+id/createLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_link"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/secondaryColor"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/forgotLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forgot_password"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/secondaryColor"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- ================= FULL SCREEN LOADER ================= -->
+    <LinearLayout
+        android:id="@+id/loaderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:text="@string/show_password"
-            android:textSize="14sp"
-            android:textColor="@color/gray"
-            android:layout_marginTop="5dp"
-            app:buttonTint="@drawable/codepal_checkbox"
-            />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:background="@drawable/dialog_background">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/login"
-            android:textAllCaps="true"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:background="@drawable/codepal_button"
-            android:layout_marginTop="15dp"
-            />
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                style="?android:attr/progressBarStyleLarge"
+                android:indeterminateTint="@color/primaryColor"
+                android:indeterminateTintMode="src_in"
+                android:indeterminate="true"/>
 
-        <TextView
-            android:id="@+id/createLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_link"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="@color/secondaryColor"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"
-            />
+            <TextView
+                android:id="@+id/loaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Signing in..."
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
