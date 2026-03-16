@@ -121,6 +121,17 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+    public boolean checkEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("users",
+                new String[]{"id"},
+                "email=?",
+                new String[]{email},
+                null, null, null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
+    }
     public User getUser(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("users", null, "id=?",

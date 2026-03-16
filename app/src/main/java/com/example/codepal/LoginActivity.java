@@ -150,6 +150,13 @@ public class LoginActivity extends AppCompatActivity {
 
         showLoader("Please wait...");
 
+        if (!database.checkEmail(getEmailAddress)) {
+            hideLoader();
+            password.setText(null);
+            Toast.makeText(this, "Incorrect email or password. Please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // with connection
@@ -213,6 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                                 });
                             }
                         } else {
+                            hideLoader();
                             Toast.makeText(this, "Login Failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
@@ -220,11 +228,14 @@ public class LoginActivity extends AppCompatActivity {
             // offline
             Auth user = database.auth(getEmailAddress, getPassword);
             if (user == null) {
-                Toast.makeText(this, "Incorrect username or password. Please try again.", Toast.LENGTH_LONG).show();
+                hideLoader();
+                Toast.makeText(this, "Incorrect email or password. Please try again.", Toast.LENGTH_LONG).show();
             } else if (user.isSuspended()) {
+                hideLoader();
                 password.setText(null);
                 showSuspendedDialog();
             } else if (user.isNotVerified()) {
+                hideLoader();
                 password.setText(null);
                 showUnverifiedEmail();
             } else {
