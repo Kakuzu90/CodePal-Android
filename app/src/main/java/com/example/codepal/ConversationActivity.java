@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -50,7 +51,12 @@ public class ConversationActivity extends AppCompatActivity {
     Firebase firebase;
     ConvoAdapter adapter;
     List<Conversation> convos;
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = new OkHttpClient()
+            .newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(90, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
     Call running;
     private String USERID;
     private String CHATID = null;
@@ -178,6 +184,7 @@ public class ConversationActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (!response.isSuccessful()) {
+                        Log.d("CLYDE", response.message());
                         runOnUiThread(() -> {
                             setLoadingState(false);
                             adapter.addAIMessage("Oops! Something went wrong!", true);
@@ -196,9 +203,10 @@ public class ConversationActivity extends AppCompatActivity {
                             setLoadingState(false);
                             adapter.addAIMessage(result, true);
                         });
-                        //Log.d("OPENAI", result);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } finally {
+                        response.close();
                     }
                 }
             });

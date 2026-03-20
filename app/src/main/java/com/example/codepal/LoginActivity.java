@@ -168,6 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (user != null) {
                                 user.reload().addOnCompleteListener(reloadTask -> {
                                    if (!user.isEmailVerified()) {
+                                       hideLoader();
                                        password.setText(null);
                                        showUnverifiedEmail();
                                        auth.signOut();
@@ -211,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         editor.apply();
                                                         redirect();
                                                     } else {
+                                                        hideLoader();
                                                         password.setText(null);
                                                         showSuspendedDialog();
                                                         auth.signOut();
